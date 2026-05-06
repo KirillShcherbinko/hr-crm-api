@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.python-version
+
+# Виртуальное окружение
+.venv/
+venv/
+env/
+ENV/
+
+# Переменные окружения (СЕКРЕТЫ)
+.env
+.env.*
+!.env.example
+
+# FastAPI / Логи
+*.log
+error.log
+
+# Тесты и покрытие
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE (VS Code, PyCharm)
+.vscode/
+.idea/
+
+# Docker
+.dockerignore
