@@ -1,6 +1,12 @@
 from celery import Celery
+from src.config.settings import settings
 
 celery_app = Celery(
     "worker",
-    broker="amqp://guest:guest@rabbitmq:5672//"
+    broker=settings.RABBITMQ_URL,
+    backend="rpc://"
 )
+
+celery_app.autodiscover_tasks(["src.infrastructure.tasks"], force=True)
+
+import src.infrastructure.tasks.email_tasks  # noqa: F401

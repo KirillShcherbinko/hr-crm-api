@@ -5,6 +5,7 @@ asyncpg
 alembic
 psycopg2-binary
 pydantic
+pydantic-settings
 python-dotenv
 passlib[bcrypt]
 pyjwt
