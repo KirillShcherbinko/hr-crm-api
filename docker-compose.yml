@@ -86,6 +86,20 @@ services:
       - "8025:8025"
     restart: always
 
+  migrations:
+    build: .
+    container_name: hr_migrations
+    working_dir: /app
+    command: alembic -c src/infrastructure/database/alembic.ini upgrade head
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app
+    restart: "no"
+
 volumes:
   postgres_data:
   minio_data:
