@@ -11,5 +11,6 @@ from .email import Email
 __all__ = [
     "Base", "User", "Candidate", "Vacancy", "VacancyCandidate",
     "VacancyStage", "StageTransition", "PipelineTemplate",
-    "PipelineTemplateStage", "Email"
+    "PipelineTemplateStage", "Email", "VacancyAnalytics",
+    "StageAnalytics", "RecruiterAnalytics", "RefreshToken"
 ]

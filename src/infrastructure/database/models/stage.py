@@ -4,7 +4,7 @@ import datetime
 import uuid
 from typing import TYPE_CHECKING, Optional
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, Numeric, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
@@ -34,6 +34,9 @@ class VacancyStage(Base):
     to_transitions: Mapped[list["StageTransition"]] = relationship(
         back_populates="to_stage", foreign_keys="[StageTransition.to_stage_id]"
     )
+    analytics: Mapped[Optional["StageAnalytics"]] = relationship(
+        back_populates="stage", cascade="all, delete-orphan"
+    )
 
 
 class StageTransition(Base):
@@ -59,3 +62,18 @@ class StageTransition(Base):
     to_stage: Mapped["VacancyStage"] = relationship(
         "VacancyStage", foreign_keys="[StageTransition.to_stage_id]", back_populates="to_transitions"
     )
+
+
+class StageAnalytics(Base):
+    __tablename__ = "stage_analytics"
+
+    vacancy_stage_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("vacancy_stages.id"), primary_key=True)
+    candidates_count: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default="0")
+    avg_days_in_stage: Mapped[Optional[float]] = mapped_column(
+        Numeric(6, 2), nullable=True)
+    updated_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
+
+    stage: Mapped["VacancyStage"] = relationship(back_populates="analytics")

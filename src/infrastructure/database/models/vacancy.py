@@ -4,7 +4,7 @@ import datetime
 import uuid
 from typing import TYPE_CHECKING, Optional
 
-from sqlalchemy import DateTime, Enum, ForeignKey, String, Text, UniqueConstraint, func
+from sqlalchemy import DateTime, Enum, ForeignKey, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
@@ -40,6 +40,9 @@ class Vacancy(Base):
     candidate_links: Mapped[list["VacancyCandidate"]
                             ] = relationship(back_populates="vacancy")
     emails: Mapped[list["Email"]] = relationship(back_populates="vacancy_link")
+    analytics: Mapped[Optional["VacancyAnalytics"]] = relationship(
+        back_populates="vacancy", cascade="all, delete-orphan"
+    )
 
 
 class VacancyCandidate(Base):
@@ -70,3 +73,17 @@ class VacancyCandidate(Base):
         back_populates="current_candidates")
     transitions: Mapped[list["StageTransition"]] = relationship(
         back_populates="vacancy_candidate", cascade="all, delete-orphan")
+
+
+class VacancyAnalytics(Base):
+    __tablename__ = "vacancy_analytics"
+
+    vacancy_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("vacancies.id"), primary_key=True)
+    total_candidates: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default="0")
+    days_open: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    updated_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
+
+    vacancy: Mapped["Vacancy"] = relationship(back_populates="analytics")
