@@ -1,0 +1,11 @@
+from typing import Dict, Any
+from uuid import UUID
+from src.interface_adapters.repositories.stage import IVacancyStageRepository
+
+
+class UpdateVacancyStageUseCase:
+    def __init__(self, repo: IVacancyStageRepository): self.repo = repo
+
+    async def execute(self, stage_id: UUID,
+                      data: Dict[str, Any]) -> Dict[str, Any]:
+        return await self.repo.update(stage_id, data)
