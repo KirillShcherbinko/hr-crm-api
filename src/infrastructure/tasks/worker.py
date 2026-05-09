@@ -9,4 +9,4 @@ celery_app = Celery(
 
 celery_app.autodiscover_tasks(["src.infrastructure.tasks"], force=True)
 
-import src.infrastructure.tasks.email_tasks  # noqa: F401
+import src.infrastructure.tasks.tasks  # noqa: F401

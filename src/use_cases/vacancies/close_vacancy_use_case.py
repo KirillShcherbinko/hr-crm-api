@@ -1,7 +1,7 @@
 from typing import Dict, Any
 from uuid import UUID
+from src.infrastructure.tasks.tasks import recalculate_vacancy_analytics_task
 from src.interface_adapters.repositories.vacancy import IVacancyRepository
-from src.infrastructure.tasks.worker import recalculate_vacancy_analytics_task
 
 
 class CloseVacancyUseCase:

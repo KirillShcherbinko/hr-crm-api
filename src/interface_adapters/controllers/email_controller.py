@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from src.use_cases.email.send_email_use_case import SendEmailUseCase
+from src.use_cases.emails.send_email_use_case import SendEmailUseCase
 
 router = APIRouter()
 

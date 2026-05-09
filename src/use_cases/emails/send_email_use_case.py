@@ -1,7 +1,7 @@
 from typing import Dict, Any
 from uuid import UUID
+from src.infrastructure.tasks.tasks import send_email_task
 from src.interface_adapters.repositories.email import IEmailRepository
-from src.infrastructure.tasks.worker import send_email_task
 
 
 class SendEmailUseCase:

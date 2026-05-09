@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from src.infrastructure.tasks.email_tasks import send_email_task
+from src.infrastructure.tasks.tasks import send_email_task
 
 router = APIRouter()
 
