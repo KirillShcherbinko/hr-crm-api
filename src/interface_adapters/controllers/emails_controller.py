@@ -4,7 +4,7 @@ from src.interface_adapters.presenters.guards import get_current_user, require_r
 from src.interface_adapters.presenters.schemas import EmailSendRequest
 from uuid import UUID
 
-router = APIRouter(prefix="/api/v1/emails", tags=["emails"])
+router = APIRouter(tags=["Emails"])
 
 
 @router.post("/", response_model=dict, status_code=201)

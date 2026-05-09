@@ -4,7 +4,7 @@ from src.interface_adapters.presenters.guards import get_current_user, require_r
 from src.interface_adapters.presenters.schemas import VacancyCreateRequest, VacancyUpdateRequest, StageCreateRequest, StageUpdateRequest, ReorderStagesRequest
 from uuid import UUID
 
-router = APIRouter(prefix="/api/v1/vacancies", tags=["vacancies"])
+router = APIRouter(tags=["Vacancies"])
 
 
 @router.get("/", response_model=list[dict])

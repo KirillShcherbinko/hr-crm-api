@@ -99,6 +99,19 @@ services:
     environment:
       - PYTHONPATH=/app
     restart: "no"
+  seed:
+    build: .
+    container_name: hr_seed
+    working_dir: /app
+    command: python -m src.infrastructure.database.seed
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+    restart: "no"
 
 volumes:
   postgres_data:

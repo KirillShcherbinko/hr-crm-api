@@ -11,15 +11,15 @@ from src.infrastructure.storage.minio_client import get_minio_client
 # ──────────────────────────────────────────────────────────────
 # 📦 REPOSITORIES
 # ──────────────────────────────────────────────────────────────
-from src.interface_adapters.repositories.auth import AuthRepository
-from src.interface_adapters.repositories.user import UserRepository
-from src.interface_adapters.repositories.candidate import CandidateRepository
-from src.interface_adapters.repositories.vacancy import VacancyRepository
-from src.interface_adapters.repositories.stage import VacancyStageRepository
-from src.interface_adapters.repositories.vacancy_candidate import VacancyCandidateRepository
-from src.interface_adapters.repositories.pipeline import PipelineTemplateRepository
-from src.interface_adapters.repositories.email import EmailRepository
-from src.interface_adapters.repositories.analytics import AnalyticsRepository
+from src.infrastructure.database.repositories.auth import AuthRepository
+from src.infrastructure.database.repositories.user import UserRepository
+from src.infrastructure.database.repositories.candidate import CandidateRepository
+from src.infrastructure.database.repositories.vacancy import VacancyRepository
+from src.infrastructure.database.repositories.stage import VacancyStageRepository
+from src.infrastructure.database.repositories.vacancy_candidate import VacancyCandidateRepository
+from src.infrastructure.database.repositories.pipeline import PipelineTemplateRepository
+from src.infrastructure.database.repositories.email import EmailRepository
+from src.infrastructure.database.repositories.analytics import AnalyticsRepository
 
 # ──────────────────────────────────────────────────────────────
 # 🎯 USE CASES

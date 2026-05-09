@@ -4,7 +4,7 @@ from uuid import UUID
 
 from src.interface_adapters.presenters.guards import get_current_user, require_admin
 
-router = APIRouter(prefix="/api/v1/analytics", tags=["analytics"])
+router = APIRouter(tags=["Analytics"])
 
 
 @router.get("/vacancies/{vacancy_id}", response_model=dict)

@@ -5,8 +5,7 @@ from src.interface_adapters.presenters.schemas import TemplateCreateRequest, Tem
 from uuid import UUID
 
 router = APIRouter(
-    prefix="/api/v1/pipeline-templates",
-    tags=["pipeline-templates"])
+    tags=["Pipeline Templates"])
 
 
 @router.get("/", response_model=list[dict])

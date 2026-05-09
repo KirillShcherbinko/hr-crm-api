@@ -3,7 +3,7 @@ from src.interface_adapters.presenters.dependencies import get_login_use_case, g
 from src.interface_adapters.presenters.guards import get_current_user
 from src.interface_adapters.presenters.schemas import LoginRequest, TokenResponse
 
-router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
+router = APIRouter(tags=["Auth"])
 
 
 @router.post("/login", response_model=TokenResponse,

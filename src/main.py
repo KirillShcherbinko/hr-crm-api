@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# Импорт роутеров (указываем явно, чтобы избежать конфликтов с __init__.py)
 from src.interface_adapters.controllers.auth_controller import router as auth_router
 from src.interface_adapters.controllers.users_controller import router as users_router
 from src.interface_adapters.controllers.candidates_controller import router as candidates_router

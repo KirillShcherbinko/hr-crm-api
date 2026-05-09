@@ -7,9 +7,11 @@ psycopg2-binary
 pydantic
 pydantic-settings
 python-dotenv
-passlib[bcrypt]
+bcrypt==3.2.2
+passlib[bcrypt]==1.7.4
 pyjwt
 celery
 rabbitmq
 minio
 fastapi-mail
+python-multipart
