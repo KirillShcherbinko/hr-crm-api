@@ -8,13 +8,13 @@ class IAuthRepository(ABC):
     async def save_refresh_token(
         self,
         user_id: UUID,
-        token_hash: str,
+        token: str,
         expires_at: Any) -> None: ...
 
     @abstractmethod
     async def get_active_token(self,
-                               token_hash: str) -> Optional[Dict[str,
-                                                                 Any]]: ...
+                               token: str) -> Optional[Dict[str,
+                                                            Any]]: ...
 
     @abstractmethod
     async def revoke_token(self, token_id: UUID) -> None: ...

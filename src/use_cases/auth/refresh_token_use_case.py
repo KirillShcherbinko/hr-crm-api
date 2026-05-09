@@ -18,8 +18,7 @@ class RefreshTokenUseCase:
         self.access_exp = access_exp
 
     async def execute(self, refresh_token: str) -> Dict[str, str]:
-        token_hash = pwd_context.hash(refresh_token)
-        stored = await self.auth_repo.get_active_token(token_hash)
+        stored = await self.auth_repo.get_active_token(refresh_token)
         if not stored:
             raise ValueError("Invalid or revoked refresh token")
 

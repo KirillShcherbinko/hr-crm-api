@@ -19,7 +19,7 @@ class LoginUseCase:
         self.refresh_exp = refresh_exp
 
     async def execute(self, email: str, password: str) -> Dict[str, str]:
-        user = await self.user_repo.get_by_email(email)
+        user = await self.user_repo.get_by_email_for_auth(email)
         if not user or not user["is_active"]:
             raise ValueError("Invalid credentials or account inactive")
 
@@ -47,9 +47,8 @@ class LoginUseCase:
                     minutes=self.refresh_exp)},
             self.secret_key,
             self.algorithm)
-        refresh_token_hash = pwd_context.hash(refresh_token)
 
-        await self.auth_repo.save_refresh_token(user["id"], refresh_token_hash, now + datetime.timedelta(minutes=self.refresh_exp))
+        await self.auth_repo.save_refresh_token(user["id"], refresh_token, now + datetime.timedelta(minutes=self.refresh_exp))
 
         return {"access_token": access_token,
                 "refresh_token": refresh_token, "token_type": "bearer"}

@@ -13,6 +13,25 @@ class UserRepository(IUserRepository, BaseRepository):
     def __init__(self, session: AsyncSession):
         super().__init__(session)
 
+    async def get_by_email_for_auth(
+            self, email: str) -> Optional[Dict[str, Any]]:
+        stmt = select(UserModel).where(UserModel.email == email)
+        result = await self.session.execute(stmt)
+        model = result.scalar_one_or_none()
+
+        if not model:
+            return None
+
+        return {
+            "id": model.id,
+            "email": model.email,
+            "hashed_password": model.hashed_password,
+            "full_name": model.full_name,
+            "role": model.role.value,
+            "is_active": model.is_active,
+            "created_at": model.created_at
+        }
+
     async def create(self, user_data: Dict[str, Any]) -> Dict[str, Any]:
         model = UserModel(**user_data)
         self.session.add(model)

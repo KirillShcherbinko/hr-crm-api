@@ -1,11 +1,10 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
 from uuid import UUID
-from datetime import datetime
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: str = Field(..., pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
     password: str = Field(..., min_length=6)
 
 

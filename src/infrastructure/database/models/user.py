@@ -66,11 +66,11 @@ class RefreshToken(Base):
     user_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("users.id"), index=True, nullable=False)
     token_hash: Mapped[str] = mapped_column(
-        String(512), nullable=False)  # Хэш SHA256 для безопасности
+        String(512), nullable=False)
     expires_at: Mapped[datetime.datetime] = mapped_column(
-        DateTime, nullable=False)
+        DateTime(timezone=True), nullable=False)
     created_at: Mapped[datetime.datetime] = mapped_column(
-        DateTime, server_default=func.now(), nullable=False)
+        DateTime(timezone=True), server_default=func.now(), nullable=False)
     is_revoked: Mapped[bool] = mapped_column(
         Boolean, nullable=False, server_default="false")
 

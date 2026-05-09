@@ -5,6 +5,11 @@ from uuid import UUID
 
 class IUserRepository(ABC):
     @abstractmethod
+    async def get_by_email_for_auth(self,
+                                    email: str) -> Optional[Dict[str,
+                                                                 Any]]: ...
+
+    @abstractmethod
     async def create(self, user_data: Dict[str, Any]) -> Dict[str, Any]: ...
     @abstractmethod
     async def get_by_id(self, user_id: UUID) -> Optional[Dict[str, Any]]: ...

@@ -14,18 +14,18 @@ class AuthRepository(IAuthRepository, BaseRepository):
         super().__init__(session)
 
     async def save_refresh_token(
-            self, user_id: UUID, token_hash: str, expires_at: Any) -> None:
+            self, user_id: UUID, token: str, expires_at: Any) -> None:
         self.session.add(
             RefreshToken(
                 user_id=user_id,
-                token_hash=token_hash,
+                token_hash=token,
                 expires_at=expires_at))
         await self.commit()
 
     async def get_active_token(
-            self, token_hash: str) -> Optional[Dict[str, Any]]:
+            self, token: str) -> Optional[Dict[str, Any]]:
         stmt = select(RefreshToken).where(
-            RefreshToken.token_hash == token_hash,
+            RefreshToken.token_hash == token,
             RefreshToken.is_revoked == False
         )
         result = await self.session.execute(stmt)

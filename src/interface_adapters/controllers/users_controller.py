@@ -13,6 +13,12 @@ async def list_users(skip=0, limit=50, _=Depends(
     return await uc.execute(skip=skip, limit=limit)
 
 
+@router.get("/me", response_model=dict)
+async def get_me(current: dict = Depends(get_current_user),
+                 uc=Depends(get_current_user_use_case)):
+    return await uc.execute(user_id=current["sub"])
+
+
 @router.get("/{user_id}", response_model=dict)
 async def get_user(user_id: UUID, _=Depends(require_admin),
                    uc=Depends(get_user_use_case)):
@@ -50,9 +56,3 @@ async def update_role(user_id: UUID, new_role: str, _=Depends(
 async def deactivate(user_id: UUID, _=Depends(require_admin),
                      uc=Depends(get_deactivate_user_use_case)):
     await uc.execute(user_id=user_id)
-
-
-@router.get("/me", response_model=dict)
-async def get_me(current: dict = Depends(get_current_user),
-                 uc=Depends(get_current_user_use_case)):
-    return await uc.execute(user_id=current["sub"])
