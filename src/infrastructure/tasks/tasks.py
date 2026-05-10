@@ -13,10 +13,10 @@ from src.infrastructure.database.models.user import RecruiterAnalytics
 
 
 @celery_app.task(bind=True, max_retries=3, default_retry_delay=60)
-def send_email_task(self, to_email: str, subject: str, body: str) -> None:
+def send_email_task(self, email: str, subject: str, body: str) -> None:
     """Отправка email кандидату с ретраями при падении SMTP."""
     try:
-        send_email_sync(to_email, subject, body)
+        send_email_sync(email, subject, body)
     except Exception as exc:
         self.retry(exc=exc)
 

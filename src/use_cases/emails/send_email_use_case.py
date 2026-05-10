@@ -14,7 +14,7 @@ class SendEmailUseCase:
         record = await self.email_repo.send(data, sent_by)
         # Асинхронная отправка
         send_email_task.delay(
-            email=data.get("to_email"),
+            email=data.get("email"),
             # предполагается, что email передаётся в data
             subject=data["subject"],
             body=data["body"]

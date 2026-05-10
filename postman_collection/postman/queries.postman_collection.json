@@ -173,12 +173,29 @@
           "name": "Create Recruiter",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Генерируем уникальный email на основе времени и случайного числа",
+                  "const timestamp = Date.now();",
+                  "const randomNum = Math.floor(Math.random() * 10000);",
+                  "const uniqueEmail = `recruiter_${timestamp}_${randomNum}@hr-crm.com`;",
+                  "",
+                  "// Сохраняем в переменную коллекции",
+                  "pm.collectionVariables.set('recruiter_email', uniqueEmail);",
+                  "console.log('📧 Generated unique email:', uniqueEmail);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "exec": [
                   "if (pm.response.code === 201) {",
                   "    const jsonData = pm.response.json();",
                   "    pm.collectionVariables.set('admin_user_id', jsonData.id);",
+                  "    console.log('✓ Created recruiter:', jsonData.id);",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -190,7 +207,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"full_name\": \"Test Recruiter\",\n    \"email\": \"recruiter@hr-crm.com\",\n    \"role\": \"recruiter\"\n}",
+              "raw": "{\n    \"full_name\": \"Test Recruiter\",\n    \"email\": \"{{recruiter_email}}\",\n    \"role\": \"recruiter\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -198,9 +215,9 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/users",
+              "raw": "{{base_url}}/api/v1/users/",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users"]
+              "path": ["api", "v1", "users", ""]
             }
           }
         },
@@ -231,9 +248,9 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/users/{{admin_user_id}}",
+              "raw": "{{base_url}}/api/v1/users/",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "users", "{{admin_user_id}}"]
+              "path": ["api", "v1", "users", ""]
             }
           }
         },
@@ -376,7 +393,7 @@
                 {
                   "key": "file",
                   "type": "file",
-                  "src": "C:/Users/Kirill/hr-crm-api/postman_collection/files/Резюме.pdf"
+                  "src": "test_resume.pdf"
                 }
               ]
             },
@@ -615,7 +632,14 @@
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/stages/{{stage_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "vacancies", "{{vacancy_id}}", "stages", "{{stage_id}}"]
+              "path": [
+                "api",
+                "v1",
+                "vacancies",
+                "{{vacancy_id}}",
+                "stages",
+                "{{stage_id}}"
+              ]
             }
           }
         },
@@ -636,7 +660,14 @@
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/stages/reorder",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "vacancies", "{{vacancy_id}}", "stages", "reorder"]
+              "path": [
+                "api",
+                "v1",
+                "vacancies",
+                "{{vacancy_id}}",
+                "stages",
+                "reorder"
+              ]
             }
           }
         },
@@ -648,7 +679,14 @@
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/stages/{{stage_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "vacancies", "{{vacancy_id}}", "stages", "{{stage_id}}"]
+              "path": [
+                "api",
+                "v1",
+                "vacancies",
+                "{{vacancy_id}}",
+                "stages",
+                "{{stage_id}}"
+              ]
             }
           }
         }
@@ -707,7 +745,15 @@
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/candidates/{{candidate_id}}/move",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "vacancies", "{{vacancy_id}}", "candidates", "{{candidate_id}}", "move"]
+              "path": [
+                "api",
+                "v1",
+                "vacancies",
+                "{{vacancy_id}}",
+                "candidates",
+                "{{candidate_id}}",
+                "move"
+              ]
             }
           }
         },
@@ -719,7 +765,15 @@
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/candidates/{{candidate_id}}/transitions",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "vacancies", "{{vacancy_id}}", "candidates", "{{candidate_id}}", "transitions"]
+              "path": [
+                "api",
+                "v1",
+                "vacancies",
+                "{{vacancy_id}}",
+                "candidates",
+                "{{candidate_id}}",
+                "transitions"
+              ]
             }
           }
         },
@@ -731,7 +785,14 @@
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/candidates/{{candidate_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "vacancies", "{{vacancy_id}}", "candidates", "{{candidate_id}}"]
+              "path": [
+                "api",
+                "v1",
+                "vacancies",
+                "{{vacancy_id}}",
+                "candidates",
+                "{{candidate_id}}"
+              ]
             }
           }
         }
@@ -905,7 +966,13 @@
             "url": {
               "raw": "{{base_url}}/api/v1/analytics/recruiters/{{admin_user_id}}",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "analytics", "recruiters", "{{admin_user_id}}"]
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "recruiters",
+                "{{admin_user_id}}"
+              ]
             }
           }
         },

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from src.interface_adapters.presenters.dependencies import *
 from src.interface_adapters.presenters.guards import get_current_user, require_admin
-from src.interface_adapters.presenters.schemas import UserCreateRequest, UserUpdateRequest
+from src.interface_adapters.presenters.schemas import RoleUpdateRequest, UserCreateRequest, UserUpdateRequest
 from uuid import UUID
 
 router = APIRouter(tags=["Users"])
@@ -34,22 +34,29 @@ async def create_user(req: UserCreateRequest, _=Depends(
     return await uc.execute(full_name=req.full_name, email=req.email, role=req.role)
 
 
-@router.patch("/{user_id}", response_model=dict)
-async def update_user(user_id: UUID, req: UserUpdateRequest, _=Depends(
-        require_admin), uc=Depends(get_update_profile_use_case)):
+@router.patch("/", response_model=dict)
+async def update_profile(
+    req: UserUpdateRequest,
+    current_user: dict = Depends(get_current_user),
+    uc=Depends(get_update_profile_use_case)
+):
     try:
-        return await uc.execute(user_id=user_id, data=req.model_dump(exclude_unset=True))
+        return await uc.execute(user_id=current_user["sub"], data=req.model_dump(exclude_unset=True))
     except ValueError:
-        raise HTTPException(404, "User not found")
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 @router.patch("/{user_id}/role", response_model=dict)
-async def update_role(user_id: UUID, new_role: str, _=Depends(
-        require_admin), uc=Depends(get_update_role_use_case)):
+async def update_role(
+    user_id: UUID,
+    req: RoleUpdateRequest,
+    _=Depends(require_admin),
+    uc=Depends(get_update_role_use_case)
+):
     try:
-        return await uc.execute(user_id=user_id, new_role=new_role)
+        return await uc.execute(user_id=user_id, new_role=req.new_role)
     except ValueError:
-        raise HTTPException(404, "User not found")
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 @router.patch("/{user_id}/deactivate", status_code=204)

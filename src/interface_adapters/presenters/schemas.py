@@ -24,6 +24,10 @@ class UserUpdateRequest(BaseModel):
     email: Optional[EmailStr] = None
 
 
+class RoleUpdateRequest(BaseModel):
+    new_role: str = Field(..., pattern="^(admin|recruiter)$")
+
+
 class CandidateCreateRequest(BaseModel):
     full_name: str
     email: EmailStr
