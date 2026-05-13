@@ -3,7 +3,9 @@ from src.interface_adapters.repositories.vacancy_candidate import IVacancyCandid
 
 
 class UnassignCandidateFromVacancyUseCase:
-    def __init__(self, repo: IVacancyCandidateRepository): self.repo = repo
+    def __init__(
+        self,
+        vc_repo: IVacancyCandidateRepository): self.vc_repo = vc_repo
 
     async def execute(self, vacancy_id: UUID, candidate_id: UUID) -> None:
-        await self.repo.unassign(vacancy_id, candidate_id)
+        await self.vc_repo.unassign(vacancy_id, candidate_id)

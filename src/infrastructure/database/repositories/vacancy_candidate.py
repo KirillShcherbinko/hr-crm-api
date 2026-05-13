@@ -50,6 +50,16 @@ class VacancyCandidateRepository(IVacancyCandidateRepository, BaseRepository):
             await self.session.delete(model)
             await self.commit()
 
+        # ... остальные методы ...
+
+    async def get_by_id(
+            self, link_id: UUID) -> Optional[VacancyCandidateModel]:
+        """Поиск записи связи по её первичному ключу (PK vacancy_candidates)"""
+        stmt = select(VacancyCandidateModel).where(
+            VacancyCandidateModel.id == link_id)
+        res = await self.session.execute(stmt)
+        return res.scalar_one_or_none()
+
     async def move_stage(self, vacancy_candidate_id: UUID,
                          new_stage_id: UUID, moved_by: UUID) -> Dict[str, Any]:
         stmt = select(VacancyCandidateModel).where(
@@ -70,6 +80,15 @@ class VacancyCandidateRepository(IVacancyCandidateRepository, BaseRepository):
         await self.commit()
         await self.refresh(vc)
         return map_vacancy_candidate(vc)
+
+    async def get_by_vacancy_and_candidate(
+            self, vacancy_id: UUID, candidate_id: UUID):
+        stmt = select(VacancyCandidateModel).where(
+            VacancyCandidateModel.vacancy_id == vacancy_id,
+            VacancyCandidateModel.candidate_id == candidate_id
+        )
+        res = await self.session.execute(stmt)
+        return res.scalar_one_or_none()
 
     async def get_transitions(
             self, vacancy_candidate_id: UUID) -> List[Dict[str, Any]]:

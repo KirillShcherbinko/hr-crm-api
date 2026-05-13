@@ -5,46 +5,15 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:8000",
-      "type": "string"
-    },
-    {
-      "key": "access_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "refresh_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "admin_user_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "candidate_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "vacancy_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "stage_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "email_id",
-      "value": "",
-      "type": "string"
-    }
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "access_token", "value": "", "type": "string" },
+    { "key": "refresh_token", "value": "", "type": "string" },
+    { "key": "admin_user_id", "value": "", "type": "string" },
+    { "key": "candidate_id", "value": "", "type": "string" },
+    { "key": "vacancy_id", "value": "", "type": "string" },
+    { "key": "stage_id", "value": "", "type": "string" },
+    { "key": "template_id", "value": "", "type": "string" },
+    { "key": "email_id", "value": "", "type": "string" }
   ],
   "item": [
     {
@@ -68,19 +37,13 @@
             }
           ],
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
+            "auth": { "type": "noauth" },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"email\": \"admin@hr-crm.local\",\n    \"password\": \"AdminSecure123!\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/auth/login",
@@ -106,9 +69,7 @@
             }
           ],
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
+            "auth": { "type": "noauth" },
             "method": "POST",
             "header": [],
             "url": {
@@ -157,14 +118,8 @@
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "users"],
               "query": [
-                {
-                  "key": "skip",
-                  "value": "0"
-                },
-                {
-                  "key": "limit",
-                  "value": "50"
-                }
+                { "key": "skip", "value": "0" },
+                { "key": "limit", "value": "50" }
               ]
             }
           }
@@ -176,12 +131,9 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "// Генерируем уникальный email на основе времени и случайного числа",
                   "const timestamp = Date.now();",
                   "const randomNum = Math.floor(Math.random() * 10000);",
                   "const uniqueEmail = `recruiter_${timestamp}_${randomNum}@hr-crm.com`;",
-                  "",
-                  "// Сохраняем в переменную коллекции",
                   "pm.collectionVariables.set('recruiter_email', uniqueEmail);",
                   "console.log('📧 Generated unique email:', uniqueEmail);"
                 ],
@@ -208,11 +160,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"full_name\": \"Test Recruiter\",\n    \"email\": \"{{recruiter_email}}\",\n    \"role\": \"recruiter\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users/",
@@ -241,11 +189,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"full_name\": \"Updated Name\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users/",
@@ -262,11 +206,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"new_role\": \"admin\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/users/{{admin_user_id}}/role",
@@ -314,11 +254,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"full_name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1234567890\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/candidates",
@@ -337,14 +273,8 @@
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "candidates"],
               "query": [
-                {
-                  "key": "skip",
-                  "value": "0"
-                },
-                {
-                  "key": "limit",
-                  "value": "50"
-                }
+                { "key": "skip", "value": "0" },
+                { "key": "limit", "value": "50" }
               ]
             }
           }
@@ -369,11 +299,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"full_name\": \"John Updated\",\n    \"phone\": \"+9876543210\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/candidates/{{candidate_id}}",
@@ -390,11 +316,7 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                {
-                  "key": "file",
-                  "type": "file",
-                  "src": "test_resume.pdf"
-                }
+                { "key": "file", "type": "file", "src": "test_resume.pdf" }
               ]
             },
             "url": {
@@ -413,30 +335,6 @@
               "raw": "{{base_url}}/api/v1/candidates/{{candidate_id}}/emails",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "candidates", "{{candidate_id}}", "emails"]
-            }
-          }
-        },
-        {
-          "name": "Delete Resume",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/v1/candidates/{{candidate_id}}/resume",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "candidates", "{{candidate_id}}", "resume"]
-            }
-          }
-        },
-        {
-          "name": "Delete Candidate",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/v1/candidates/{{candidate_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "candidates", "{{candidate_id}}"]
             }
           }
         }
@@ -467,11 +365,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"title\": \"Senior Python Developer\",\n    \"description\": \"We are looking for an experienced Python developer\",\n    \"status\": \"draft\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies",
@@ -490,18 +384,9 @@
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "vacancies"],
               "query": [
-                {
-                  "key": "skip",
-                  "value": "0"
-                },
-                {
-                  "key": "limit",
-                  "value": "50"
-                },
-                {
-                  "key": "status_filter",
-                  "value": "open"
-                }
+                { "key": "skip", "value": "0" },
+                { "key": "limit", "value": "50" },
+                { "key": "status_filter", "value": "open" }
               ]
             }
           }
@@ -526,11 +411,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"title\": \"Senior Python Developer (Updated)\",\n    \"description\": \"Updated description\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}",
@@ -548,18 +429,6 @@
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/close",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "vacancies", "{{vacancy_id}}", "close"]
-            }
-          }
-        },
-        {
-          "name": "Delete Vacancy",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "vacancies", "{{vacancy_id}}"]
             }
           }
         }
@@ -602,11 +471,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"name\": \"Phone Screening\",\n    \"is_final\": false\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/stages",
@@ -623,11 +488,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"name\": \"Phone Screening (Updated)\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/stages/{{stage_id}}",
@@ -651,11 +512,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"stage_ids\": []\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/stages/reorder",
@@ -667,25 +524,6 @@
                 "{{vacancy_id}}",
                 "stages",
                 "reorder"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Delete Stage",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/stages/{{stage_id}}",
-              "host": ["{{base_url}}"],
-              "path": [
-                "api",
-                "v1",
-                "vacancies",
-                "{{vacancy_id}}",
-                "stages",
-                "{{stage_id}}"
               ]
             }
           }
@@ -703,11 +541,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"candidate_id\": \"{{candidate_id}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/candidates",
@@ -736,11 +570,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"new_stage_id\": \"{{stage_id}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/candidates/{{candidate_id}}/move",
@@ -776,25 +606,6 @@
               ]
             }
           }
-        },
-        {
-          "name": "Unassign Candidate",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/candidates/{{candidate_id}}",
-              "host": ["{{base_url}}"],
-              "path": [
-                "api",
-                "v1",
-                "vacancies",
-                "{{vacancy_id}}",
-                "candidates",
-                "{{candidate_id}}"
-              ]
-            }
-          }
         }
       ]
     },
@@ -821,11 +632,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"name\": \"Standard Hiring Pipeline\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/pipeline-templates",
@@ -841,12 +648,8 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"template_id\": \"\",\n    \"vacancy_id\": \"{{vacancy_id}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n    \"template_id\": \"{{template_id}}\",\n    \"vacancy_id\": \"{{vacancy_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/pipeline-templates/apply",
@@ -882,11 +685,7 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"candidate_id\": \"{{candidate_id}}\",\n    \"vacancy_id\": \"{{vacancy_id}}\",\n    \"subject\": \"Interview Invitation\",\n    \"body\": \"<p>Dear Candidate,</p><p>We would like to invite you for an interview.</p>\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "{{base_url}}/api/v1/emails",
@@ -905,14 +704,8 @@
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "emails"],
               "query": [
-                {
-                  "key": "skip",
-                  "value": "0"
-                },
-                {
-                  "key": "limit",
-                  "value": "50"
-                }
+                { "key": "skip", "value": "0" },
+                { "key": "limit", "value": "50" }
               ]
             }
           }
@@ -985,6 +778,217 @@
               "raw": "{{base_url}}/api/v1/analytics/summary",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "analytics", "summary"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "99_Cleanup",
+      "item": [
+        {
+          "name": "🧹 Delete Resume",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "if (!pm.collectionVariables.get('candidate_id')) {",
+                  "    console.log('⏭ Skipping: candidate_id not set');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/candidates/{{candidate_id}}/resume",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "candidates", "{{candidate_id}}", "resume"]
+            }
+          }
+        },
+        {
+          "name": "🧹 Delete Stage",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "if (!pm.collectionVariables.get('stage_id')) {",
+                  "    console.log('⏭ Skipping: stage_id not set');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 204) {",
+                  "    console.log('✓ Stage deleted');",
+                  "    pm.collectionVariables.unset('stage_id');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/stages/{{stage_id}}",
+              "host": ["{{base_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "vacancies",
+                "{{vacancy_id}}",
+                "stages",
+                "{{stage_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "🧹 Unassign Candidate from Vacancy",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "if (!pm.collectionVariables.get('candidate_id') || !pm.collectionVariables.get('vacancy_id')) {",
+                  "    console.log('⏭ Skipping: candidate_id or vacancy_id not set');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}/candidates/{{candidate_id}}",
+              "host": ["{{base_url}}"],
+              "path": [
+                "api",
+                "v1",
+                "vacancies",
+                "{{vacancy_id}}",
+                "candidates",
+                "{{candidate_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "🧹 Delete Candidate",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "if (!pm.collectionVariables.get('candidate_id')) {",
+                  "    console.log('⏭ Skipping: candidate_id not set');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 204) {",
+                  "    console.log('✓ Candidate deleted');",
+                  "    pm.collectionVariables.unset('candidate_id');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/candidates/{{candidate_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "candidates", "{{candidate_id}}"]
+            }
+          }
+        },
+        {
+          "name": "🧹 Delete Vacancy",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "if (!pm.collectionVariables.get('vacancy_id')) {",
+                  "    console.log('⏭ Skipping: vacancy_id not set');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 204) {",
+                  "    console.log('✓ Vacancy deleted');",
+                  "    pm.collectionVariables.unset('vacancy_id');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/vacancies/{{vacancy_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "vacancies", "{{vacancy_id}}"]
+            }
+          }
+        },
+        {
+          "name": "🧹 Reset Variables",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.unset('access_token');",
+                  "pm.collectionVariables.unset('refresh_token');",
+                  "pm.collectionVariables.unset('recruiter_email');",
+                  "console.log('🧹 All test variables reset');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
             }
           }
         }

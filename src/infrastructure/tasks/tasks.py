@@ -1,8 +1,11 @@
+from sqlalchemy.exc import IntegrityError
+import logging
 import uuid
 import datetime
 from sqlalchemy import func
 
 from src.infrastructure.database.db import get_db
+from src.infrastructure.database.db_sync import get_sync_session
 from src.infrastructure.email.email_sync import send_email_sync
 from .worker import celery_app
 
@@ -21,25 +24,39 @@ def send_email_task(self, email: str, subject: str, body: str) -> None:
         self.retry(exc=exc)
 
 
-@celery_app.task(bind=True, max_retries=3, default_retry_delay=30)
+# src/infrastructure/tasks/tasks.py
+# ... остальные импорты моделей ...
+
+logger = logging.getLogger(__name__)
+
+
+@celery_app.task(bind=True, max_retries=3, default_retry_delay=60)
 def recalculate_vacancy_analytics_task(self, vacancy_id: str) -> None:
     """Пересчёт агрегатов по вакансии: кол-во кандидатов, дни открытия."""
     try:
         vacancy_uuid = uuid.UUID(vacancy_id)
-        with next(get_db()) as session:
+
+        with get_sync_session() as session:
+            # ✅ 1. Защита от гонки условий / удаления
+            vacancy = session.query(Vacancy).filter(
+                Vacancy.id == vacancy_uuid).first()
+            if not vacancy:
+                logger.warning(
+                    f"Vacancy {vacancy_id} not found. Skipping analytics.")
+                # Выходим без ошибки. Если это была гонка, ретрай сработает при
+                # следующем вызове.
+                return
+
             total_candidates = session.query(func.count(VacancyCandidate.id)).filter(
                 VacancyCandidate.vacancy_id == vacancy_uuid
             ).scalar() or 0
 
-            vacancy = session.query(Vacancy).filter(
-                Vacancy.id == vacancy_uuid).first()
             days_open = None
-            if vacancy:
-                now = datetime.datetime.now()
-                if vacancy.status == "closed" and vacancy.closed_at:
-                    days_open = (vacancy.closed_at - vacancy.created_at).days
-                elif vacancy.created_at:
-                    days_open = (now - vacancy.created_at).days
+            now = datetime.datetime.now()
+            if vacancy.status == "closed" and vacancy.closed_at:
+                days_open = (vacancy.closed_at - vacancy.created_at).days
+            elif vacancy.created_at:
+                days_open = (now - vacancy.created_at).days
 
             # Upsert
             analytics = session.query(VacancyAnalytics).filter(
@@ -56,8 +73,14 @@ def recalculate_vacancy_analytics_task(self, vacancy_id: str) -> None:
                     total_candidates=total_candidates,
                     days_open=days_open
                 ))
-            session.commit()
+            # commit() вызывается автоматически в get_sync_session()
+
+    except IntegrityError as e:
+        logger.warning(
+            f"IntegrityError for vacancy {vacancy_id}: {e}. Retrying...")
+        self.retry(exc=e, countdown=60)
     except Exception as exc:
+        logger.error(f"Unexpected error in analytics task: {exc}")
         self.retry(exc=exc)
 
 
@@ -66,7 +89,9 @@ def recalculate_stage_analytics_task(self, vacancy_id: str) -> None:
     """Пересчёт метрик по этапам воронки: кол-во кандидатов, среднее время."""
     try:
         vacancy_uuid = uuid.UUID(vacancy_id)
-        with next(get_db()) as session:
+
+        # Используем синхронную сессию
+        with get_sync_session() as session:
             stages = session.query(VacancyStage).filter(
                 VacancyStage.vacancy_id == vacancy_uuid
             ).order_by(VacancyStage.order_index).all()
@@ -115,7 +140,7 @@ def recalculate_stage_analytics_task(self, vacancy_id: str) -> None:
                         candidates_count=candidates_count,
                         avg_days_in_stage=avg_days
                     ))
-            session.commit()
+            # session.commit() не нужен
     except Exception as exc:
         self.retry(exc=exc)
 
@@ -125,7 +150,9 @@ def recalculate_recruiter_analytics_task(self, recruiter_id: str) -> None:
     """Пересчёт нагрузки рекрутера: открытые вакансии, назначенные кандидаты."""
     try:
         recruiter_uuid = uuid.UUID(recruiter_id)
-        with next(get_db()) as session:
+
+        # Используем синхронную сессию
+        with get_sync_session() as session:
             open_vacancies = session.query(func.count(Vacancy.id)).filter(
                 Vacancy.created_by == recruiter_uuid,
                 Vacancy.status == "open"
@@ -150,6 +177,6 @@ def recalculate_recruiter_analytics_task(self, recruiter_id: str) -> None:
                     open_vacancies_count=open_vacancies,
                     total_candidates_assigned=total_assigned
                 ))
-            session.commit()
+            # session.commit() не нужен
     except Exception as exc:
         self.retry(exc=exc)

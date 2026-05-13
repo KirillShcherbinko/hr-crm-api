@@ -4,8 +4,10 @@ from src.interface_adapters.repositories.vacancy_candidate import IVacancyCandid
 
 
 class GetCandidateTransitionsUseCase:
-    def __init__(self, repo: IVacancyCandidateRepository): self.repo = repo
+    def __init__(
+        self,
+        vc_repo: IVacancyCandidateRepository): self.vc_repo = vc_repo
 
     async def execute(
             self, vacancy_candidate_id: UUID) -> List[Dict[str, Any]]:
-        return await self.repo.get_transitions(vacancy_candidate_id)
+        return await self.vc_repo.get_transitions(vacancy_candidate_id)

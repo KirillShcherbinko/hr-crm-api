@@ -4,7 +4,9 @@ from src.interface_adapters.repositories.vacancy_candidate import IVacancyCandid
 
 
 class ListVacancyCandidatesUseCase:
-    def __init__(self, repo: IVacancyCandidateRepository): self.repo = repo
+    def __init__(
+        self,
+        vc_repo: IVacancyCandidateRepository): self.vc_repo = vc_repo
 
     async def execute(self, vacancy_id: UUID) -> List[Dict[str, Any]]:
-        return await self.repo.list_by_vacancy(vacancy_id)
+        return await self.vc_repo.list_by_vacancy(vacancy_id)

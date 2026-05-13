@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from src.interface_adapters.presenters.dependencies import *
 from src.interface_adapters.presenters.guards import get_current_user, require_recruiter
-from src.interface_adapters.presenters.schemas import VacancyCreateRequest, VacancyUpdateRequest, StageCreateRequest, StageUpdateRequest, ReorderStagesRequest
+from src.interface_adapters.presenters.schemas import AssignCandidateRequest, MoveCandidateRequest, VacancyCreateRequest, VacancyUpdateRequest, StageCreateRequest, StageUpdateRequest, ReorderStagesRequest
 from uuid import UUID
 
 router = APIRouter(tags=["Vacancies"])
@@ -60,14 +60,14 @@ async def list_stages(vacancy_id: UUID, _=Depends(
 @router.post("/{vacancy_id}/stages", response_model=dict, status_code=201)
 async def add_stage(vacancy_id: UUID, req: StageCreateRequest, _=Depends(
         require_recruiter), uc=Depends(get_create_vacancy_stage_use_case)):
-    return await uc.execute(vacancy_id=vacancy_id, stage_data=req.model_dump())
+    return await uc.execute(vacancy_id=vacancy_id, data=req.model_dump())
 
 
 @router.patch("/{vacancy_id}/stages/{stage_id}", response_model=dict)
 async def update_stage(vacancy_id: UUID, stage_id: UUID, req: StageUpdateRequest, _=Depends(
         require_recruiter), uc=Depends(get_update_vacancy_stage_use_case)):
     try:
-        return await uc.execute(stage_id=stage_id, stage_data=req.model_dump(exclude_unset=True))
+        return await uc.execute(stage_id=stage_id, data=req.model_dump(exclude_unset=True))
     except ValueError:
         raise HTTPException(404, "Stage not found")
 
@@ -93,9 +93,21 @@ async def list_vc(vacancy_id: UUID, _=Depends(get_current_user),
 
 
 @router.post("/{vacancy_id}/candidates", response_model=dict, status_code=201)
-async def assign_candidate(vacancy_id: UUID, candidate_id: UUID, current=Depends(
-        require_recruiter), uc=Depends(get_assign_candidate_use_case)):
-    return await uc.execute(vacancy_id=vacancy_id, candidate_id=candidate_id, assigned_by=current["sub"])
+async def assign_candidate(
+    vacancy_id: UUID,
+    req: AssignCandidateRequest,
+    current_user: dict = Depends(get_current_user),
+    uc=Depends(get_assign_candidate_use_case)
+):
+    result = await uc.execute(
+        vacancy_id=vacancy_id,
+        candidate_id=req.candidate_id,
+        assigned_by=current_user["sub"]
+    )
+
+    result["id"] = result["candidate_id"]
+
+    return result
 
 
 @router.delete("/{vacancy_id}/candidates/{candidate_id}", status_code=204)
@@ -106,9 +118,19 @@ async def unassign_candidate(vacancy_id: UUID, candidate_id: UUID, _=Depends(
 
 @router.post("/{vacancy_id}/candidates/{candidate_id}/move",
              response_model=dict)
-async def move_stage(vacancy_id: UUID, candidate_id: UUID, new_stage_id: UUID, current=Depends(
-        require_recruiter), uc=Depends(get_move_candidate_stage_use_case)):
-    return await uc.execute(vacancy_candidate_id=candidate_id, new_stage_id=new_stage_id, moved_by=current["sub"])
+async def move_candidate(
+    vacancy_id: UUID,
+    candidate_id: UUID,
+    req: MoveCandidateRequest,
+    current_user: dict = Depends(get_current_user),
+    uc=Depends(get_move_candidate_stage_use_case)
+):
+    return await uc.execute(
+        vacancy_id=vacancy_id,
+        candidate_id=candidate_id,
+        new_stage_id=req.new_stage_id,
+        moved_by=current_user["sub"]
+    )
 
 
 @router.get("/{vacancy_id}/candidates/{candidate_id}/transitions",

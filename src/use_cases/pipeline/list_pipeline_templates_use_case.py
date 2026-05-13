@@ -3,7 +3,9 @@ from src.interface_adapters.repositories.pipeline import IPipelineTemplateReposi
 
 
 class ListPipelineTemplatesUseCase:
-    def __init__(self, repo: IPipelineTemplateRepository): self.repo = repo
+    def __init__(
+        self,
+        pipeline_repo: IPipelineTemplateRepository): self.pipeline_repo = pipeline_repo
 
     async def execute(self) -> List[Dict[str, Any]
-                                    ]: return await self.repo.list()
+                                    ]: return await self.pipeline_repo.list()

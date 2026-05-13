@@ -4,8 +4,10 @@ from src.interface_adapters.repositories.pipeline import IPipelineTemplateReposi
 
 
 class CreatePipelineTemplateUseCase:
-    def __init__(self, repo: IPipelineTemplateRepository): self.repo = repo
+    def __init__(
+        self,
+        pipeline_repo: IPipelineTemplateRepository): self.pipeline_repo = pipeline_repo
 
     async def execute(self, data: Dict[str, Any],
                       created_by: UUID) -> Dict[str, Any]:
-        return await self.repo.create(data, created_by)
+        return await self.pipeline_repo.create(data, created_by)

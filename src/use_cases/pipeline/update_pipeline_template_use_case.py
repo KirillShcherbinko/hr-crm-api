@@ -4,8 +4,10 @@ from src.interface_adapters.repositories.pipeline import IPipelineTemplateReposi
 
 
 class UpdatePipelineTemplateUseCase:
-    def __init__(self, repo: IPipelineTemplateRepository): self.repo = repo
+    def __init__(
+        self,
+        pipeline_repo: IPipelineTemplateRepository): self.pipeline_repo = pipeline_repo
 
     async def execute(self, template_id: UUID,
                       data: Dict[str, Any]) -> Dict[str, Any]:
-        return await self.repo.update(template_id, data)
+        return await self.pipeline_repo.update(template_id, data)

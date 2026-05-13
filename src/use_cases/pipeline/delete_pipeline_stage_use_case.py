@@ -3,7 +3,9 @@ from src.interface_adapters.repositories.pipeline import IPipelineTemplateReposi
 
 
 class DeletePipelineStageUseCase:
-    def __init__(self, repo: IPipelineTemplateRepository): self.repo = repo
+    def __init__(
+        self,
+        pipeline_repo: IPipelineTemplateRepository): self.pipeline_repo = pipeline_repo
 
     async def execute(self, stage_id: UUID) -> None:
-        await self.repo.delete_stage(stage_id)
+        await self.pipeline_repo.delete_stage(stage_id)

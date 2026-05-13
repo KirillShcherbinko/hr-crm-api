@@ -4,8 +4,10 @@ from src.interface_adapters.repositories.stage import IVacancyStageRepository
 
 
 class UpdateVacancyStageUseCase:
-    def __init__(self, repo: IVacancyStageRepository): self.repo = repo
+    def __init__(
+        self,
+        stage_repo: IVacancyStageRepository): self.stage_repo = stage_repo
 
     async def execute(self, stage_id: UUID,
                       data: Dict[str, Any]) -> Dict[str, Any]:
-        return await self.repo.update(stage_id, data)
+        return await self.stage_repo.update(stage_id, data)

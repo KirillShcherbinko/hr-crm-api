@@ -4,8 +4,10 @@ from src.interface_adapters.repositories.pipeline import IPipelineTemplateReposi
 
 
 class ApplyTemplateToVacancyUseCase:
-    def __init__(self, repo: IPipelineTemplateRepository): self.repo = repo
+    def __init__(
+        self,
+        pipeline_repo: IPipelineTemplateRepository): self.pipeline_repo = pipeline_repo
 
     async def execute(self, template_id: UUID,
                       vacancy_id: UUID) -> List[Dict[str, Any]]:
-        return await self.repo.apply_to_vacancy(template_id, vacancy_id)
+        return await self.pipeline_repo.apply_to_vacancy(template_id, vacancy_id)

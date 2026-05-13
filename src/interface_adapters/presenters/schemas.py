@@ -63,12 +63,25 @@ class ReorderStagesRequest(BaseModel):
     stage_ids: List[UUID]
 
 
+class AssignCandidateRequest(BaseModel):
+    candidate_id: UUID
+
+
+class MoveCandidateRequest(BaseModel):
+    new_stage_id: UUID
+
+
 class TemplateCreateRequest(BaseModel):
     name: str
 
 
 class TemplateUpdateRequest(BaseModel):
     name: Optional[str] = None
+
+
+class ApplyTemplateRequest(BaseModel):
+    template_id: UUID
+    vacancy_id: UUID
 
 
 class EmailSendRequest(BaseModel):

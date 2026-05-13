@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from src.interface_adapters.presenters.dependencies import *
 from src.interface_adapters.presenters.guards import get_current_user, require_recruiter
-from src.interface_adapters.presenters.schemas import TemplateCreateRequest, TemplateUpdateRequest, StageCreateRequest, StageUpdateRequest
+from src.interface_adapters.presenters.schemas import ApplyTemplateRequest, TemplateCreateRequest, TemplateUpdateRequest, StageCreateRequest, StageUpdateRequest
 from uuid import UUID
 
 router = APIRouter(
@@ -66,6 +66,12 @@ async def delete_stage(template_id: UUID, stage_id: UUID, _=Depends(
 
 
 @router.post("/apply", response_model=list[dict])
-async def apply_template(template_id: UUID, vacancy_id: UUID, _=Depends(
-        require_recruiter), uc=Depends(get_apply_template_use_case)):
-    return await uc.execute(template_id=template_id, vacancy_id=vacancy_id)
+async def apply_template(
+    req: ApplyTemplateRequest,
+    _=Depends(require_recruiter),
+    uc=Depends(get_apply_template_use_case)
+):
+    return await uc.execute(
+        template_id=req.template_id,
+        vacancy_id=req.vacancy_id
+    )

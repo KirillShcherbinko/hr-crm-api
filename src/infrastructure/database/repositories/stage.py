@@ -3,7 +3,7 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.infrastructure.database.models.stage import VacancyStage as VacancyStageModel
+from src.infrastructure.database.models.stage import StageTransition, VacancyStage as VacancyStageModel
 from src.interface_adapters.presenters.mappers import map_vacancy_stage
 from src.interface_adapters.repositories.stage import IVacancyStageRepository
 from .base import BaseRepository
@@ -54,13 +54,28 @@ class VacancyStageRepository(IVacancyStageRepository, BaseRepository):
         return map_vacancy_stage(model)
 
     async def delete(self, stage_id: UUID) -> None:
-        stmt = select(VacancyStageModel).where(
-            VacancyStageModel.id == stage_id)
+        stmt = select(StageTransition).where(
+            (StageTransition.from_stage_id == stage_id)
+            | (StageTransition.to_stage_id == stage_id)
+        )
         result = await self.session.execute(stmt)
-        model = result.scalar_one_or_none()
+        transitions = result.scalars().all()
+
+        for transition in transitions:
+            await self.session.delete(transition)
+
+        await self.session.flush()
+
+        stmt_stage = select(VacancyStageModel).where(
+            VacancyStageModel.id == stage_id
+        )
+        res = await self.session.execute(stmt_stage)
+        model = res.scalar_one_or_none()
+
         if model:
             await self.session.delete(model)
-            await self.commit()
+
+        await self.commit()
 
     async def reorder(self, vacancy_id: UUID,
                       new_order: List[UUID]) -> List[Dict[str, Any]]:

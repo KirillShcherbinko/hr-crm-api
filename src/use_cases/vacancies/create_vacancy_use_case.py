@@ -4,8 +4,10 @@ from src.interface_adapters.repositories.vacancy import IVacancyRepository
 
 
 class CreateVacancyUseCase:
-    def __init__(self, repo: IVacancyRepository): self.repo = repo
+    def __init__(
+        self,
+        vacancy_repo: IVacancyRepository): self.vacancy_repo = vacancy_repo
 
     async def execute(self, data: Dict[str, Any],
                       created_by: UUID) -> Dict[str, Any]:
-        return await self.repo.create(data, created_by)
+        return await self.vacancy_repo.create(data, created_by)

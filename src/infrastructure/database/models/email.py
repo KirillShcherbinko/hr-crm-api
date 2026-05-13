@@ -18,14 +18,19 @@ if TYPE_CHECKING:
 
 class Email(Base):
     __tablename__ = "emails"
-
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     candidate_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("candidates.id"), nullable=False)
+        ForeignKey("candidates.id", ondelete="CASCADE"),
+        nullable=False
+    )
     vacancy_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        ForeignKey("vacancies.id"), nullable=True)
+        ForeignKey("vacancies.id", ondelete="CASCADE"),
+        nullable=True
+    )
     sent_by: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("users.id"), nullable=False)
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False
+    )
     subject: Mapped[str] = mapped_column(String(255), nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     sent_at: Mapped[datetime.datetime] = mapped_column(

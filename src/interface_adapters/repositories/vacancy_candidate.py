@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from uuid import UUID
 
 
@@ -25,6 +25,10 @@ class IVacancyCandidateRepository(ABC):
                          new_stage_id: UUID,
                          moved_by: UUID) -> Dict[str,
                                                  Any]: ...
+
+    @abstractmethod
+    async def get_by_vacancy_and_candidate(
+        self, vacancy_id: UUID, candidate_id: UUID) -> Optional[object]: ...
 
     @abstractmethod
     async def get_transitions(self,

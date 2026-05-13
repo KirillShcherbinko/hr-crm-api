@@ -34,4 +34,5 @@ class Candidate(Base):
     creator: Mapped["User"] = relationship(back_populates="created_candidates")
     vacancy_links: Mapped[list["VacancyCandidate"]
                           ] = relationship(back_populates="candidate")
-    emails: Mapped[list["Email"]] = relationship(back_populates="candidate")
+    emails: Mapped[list["Email"]] = relationship(
+        back_populates="candidate", passive_deletes=True)
